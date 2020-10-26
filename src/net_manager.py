@@ -20,7 +20,7 @@ class main_win():
     def __init__(self, master):
         self.master = master
         self.master.option_add("*Font", 'arial 10')
-        self.master.title('Net Manager 0.2 Alpha')
+        self.master.title('Net Manager ' + VERSION + ' Alpha')
         self.master = master
         self.master.configure(background = 'white')
         self.master.resizable(False, False)
