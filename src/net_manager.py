@@ -8,6 +8,7 @@ import datetime
 from os.path import pardir, abspath, join, dirname
 from time import gmtime, strftime
 from sys import platform
+from tkinter import messagebox
 
 
 global hostname, IP_address, VERSION
@@ -59,7 +60,7 @@ class main_win():
         self.show_wifi_password.configure(background = 'white')
 
         self.show_SPEEDEST = tk.Button(master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
-        self.show_SPEEDEST.place(relx= 0.62, rely = 0.15)
+        self.show_SPEEDEST.place(relx= 0.62, rely = 0.275)
         self.show_SPEEDEST.configure(background = 'white')
 
         self.hostname_entry = tk.Entry(master)
@@ -88,6 +89,9 @@ class main_win():
     def print_hn(self):
         self.hostname_entry.delete(0, 'end')
         self.hostname_entry.insert(0, hostname)
+
+    def show_info(self):
+        messagebox.showinfo('Net Manager ' + VERSION + ' Alpha', 'contributors: tsoun and\nvanourogeros.')
 
     def print_ip(self):
         self.ip_entry.delete(0, 'end')
@@ -138,7 +142,11 @@ class main_win():
         try:
             self.print_time()
             self.print_to_log('Trying to connect.')
-            subprocess.call(["speedtest-cli",  ">",  join(current_dir, "speed.txt")], shell=True)
+            dir = join(current_dir, "src/speed.txt")
+            if platform == 'win32':
+              subprocess.call(["speedtest-cli",  ">",  join(current_dir, "src/speed.txt")], shell=True)
+            elif platform == 'linux' or platform == 'linux2':
+              subprocess.call('speedtest-cli > speed.txt', shell=True, cwd = join(current_dir, "src"))
             self.print_time()
             self.print_to_log('Speedtest ready.')
             try:
@@ -146,7 +154,7 @@ class main_win():
                     lines = s.readlines()
                     self.print_time()
                     self.print_to_log(lines[-3].rstrip() + ' // ' + lines[-1].rstrip())
-                os.remove(join(current_dir, "speed.txt"))
+                os.remove(join(current_dir, "src/speed.txt"))
             except:
                 self.print_time()
                 self.print_to_log('Error, cannot print the results.')
