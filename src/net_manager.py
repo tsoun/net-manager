@@ -133,9 +133,16 @@ class main_win():
         try:
             self.print_time()
             self.print_to_log('Trying to connect.')
-            subprocess.call("speedtest-cli > st.txt", shell=True)
+            subprocess.call(["speedtest-cli",  ">",  "T:/!!!Projects!!!/tsoun_repos/NetManager/src/speed.txt"], shell=True)
             self.print_time()
             self.print_to_log('Speedtest ready.')
+            try:
+                with open(join(current_dir, 'src/speed.txt'), 'r') as s:
+                    lines = s.readlines()
+                    self.print_to_log(lines[-3] + ' // ' + lines[-1])
+            except:
+                self.print_time()
+                self.print_to_log('Error, cannot print the results.')
         except:
             self.print_time()
             self.print_to_log('Error, cannot perform a Speedtest.')
