@@ -138,7 +138,7 @@ class main_win():
         try:
             self.print_time()
             self.print_to_log('Trying to connect.')
-            subprocess.call(["speedtest-cli",  ">",  join(current_dir, "speed.txt")], shell=True)
+            subprocess.call(["speedtest-cli",  ">",  join(current_dir, "src/speed.txt")], shell=True)
             self.print_time()
             self.print_to_log('Speedtest ready.')
             try:
@@ -146,7 +146,7 @@ class main_win():
                     lines = s.readlines()
                     self.print_time()
                     self.print_to_log(lines[-3].rstrip() + ' // ' + lines[-1].rstrip())
-                os.remove(join(current_dir, "speed.txt"))
+                os.remove(join(current_dir, "src/speed.txt"))
             except:
                 self.print_time()
                 self.print_to_log('Error, cannot print the results.')
