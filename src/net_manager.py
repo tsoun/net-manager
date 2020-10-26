@@ -12,7 +12,7 @@ from tkinter import messagebox
 
 
 global hostname, IP_address, VERSION
-VERSION = '0.2.1'
+VERSION = '0.3.0'
 
 current_dir = abspath(join(dirname(__file__), pardir))
 image_path = join(current_dir, "img/net.png")
