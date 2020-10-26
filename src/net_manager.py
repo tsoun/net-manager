@@ -142,7 +142,11 @@ class main_win():
         try:
             self.print_time()
             self.print_to_log('Trying to connect.')
-            subprocess.call(["speedtest-cli",  ">",  join(current_dir, "src/speed.txt")], shell=True)
+            dir = join(current_dir, "src/speed.txt")
+            if platform == 'win32':
+              subprocess.call(["speedtest-cli",  ">",  join(current_dir, "src/speed.txt")], shell=True)
+            elif platform == 'linux' or platform == 'linux2':
+              subprocess.call('speedtest-cli > speed.txt', shell=True, cwd = join(current_dir, "src"))
             self.print_time()
             self.print_to_log('Speedtest ready.')
             try:
