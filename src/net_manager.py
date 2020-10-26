@@ -7,9 +7,9 @@ import datetime
 from os.path import pardir, abspath, join, dirname
 from time import gmtime, strftime
 
-""" v0.2.1 """
 
-global hostname, IP_address
+global hostname, IP_address, VERSION
+VERSION = '0.2.1'
 
 current_dir = abspath(join(dirname(__file__), pardir))
 image_path = join(current_dir, "img/net.png")
@@ -26,7 +26,7 @@ class main_win():
         self.masterback.pack()
         self.masterback.configure(background = 'white')
          
-        self.Message = tk.Label(master, text='Welcome to Net Manager 0.2 Alpha Build - Exclusive Alpha Access.')
+        self.Message = tk.Label(master, text='Welcome to Net Manager ' + VERSION + ' Alpha Build - Exclusive Alpha Access.')
         self.Message.place(relx= 0.5, rely = 0.105, anchor = 'center')
         self.Message.configure(background = 'white')
  
@@ -55,6 +55,10 @@ class main_win():
         self.show_wifi_password = tk.Button(master, text = 'Show Wifi password', command = self.find_wifi_password)
         self.show_wifi_password.place(relx= 0.62, rely = 0.375)
         self.show_wifi_password.configure(background = 'white')
+
+        self.show_SPEEDEST = tk.Button(master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
+        self.show_SPEEDEST.place(relx= 0.62, rely = 0.15)
+        self.show_SPEEDEST.configure(background = 'white')
                         
         self.hostname_entry = tk.Entry(master)
         self.hostname_entry.place(relx = 0.1, rely = 0.5)
@@ -89,7 +93,7 @@ class main_win():
         
         self.copy_ip()
         self.print_time()
-        self.print_to_log()
+        self.print_to_log('Shown ' + hostname + '\'s IP address and copied it to clipboard.')
 
     def find_nw_name(self):
         self.nw_str = (str(subprocess.check_output('netsh wlan show interfaces')))
@@ -102,15 +106,15 @@ class main_win():
         pyperclip.copy(self.ip_entry.get())
         spam = pyperclip.paste()
 
-    def print_to_log(self):
-        self.log.insert('insert', 'Shown ' + hostname +'\'s IP address and copied it to clipboard.' + '\n')
+    def print_to_log(self, msg):
+        self.log.insert('insert', msg + '\n\n')
 
     def print_time (self):
-        self.log.insert('insert', str(strftime('%Y.%m.%d, %H:%M:%S', gmtime())) + ' // ')
+        self.log.insert('insert', '\n' + str(strftime('%Y.%m.%d, %H:%M:%S', gmtime())) + ' // ')
 
     def find_wifi_password(self):
         self.print_time()
-        self.log.insert('insert', ' Shown network ID\'s and passphrases.\ns')
+        self.print_to_log('Shown network ID\'s and passphrases.')
         data = subprocess.check_output(['netsh', 'wlan', 'show', 'profiles']).decode('utf-8', errors="backslashreplace").split('\n')
         profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
         for i in profiles:
@@ -123,7 +127,18 @@ class main_win():
                     self.log.insert('insert', str(i) + ": OpenNetwork\n")
             except subprocess.CalledProcessError:
                 self.log.insert('insert', (i, "ENCODING ERROR"))
-        input("")
+                input("")
+
+    def print_SPEEDTEST(self):
+        try:
+            self.print_time()
+            self.print_to_log('Trying to connect.')
+            subprocess.call("speedtest-cli > st.txt", shell=True)
+            self.print_time()
+            self.print_to_log('Speedtest ready.')
+        except:
+            self.print_time()
+            self.print_to_log('Error, cannot perform a Speedtest.')
 
 if __name__ == "__main__":
     hostname = sc.gethostname()
