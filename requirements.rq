@@ -1,3 +1,4 @@
 ######## REQUIREMENTS FOR NET_MANAGER ########
 
 pyperclip
+speedtest-cli
