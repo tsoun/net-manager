@@ -51,10 +51,6 @@ class main_win():
         self.lcl_nw.place(relx = 0.1, rely = 0.4)
         self.lcl_nw.configure(background = 'white')
 
-    """    self.credits = tk.Button(master, text = 'Show Credits', command = self.show_info)
-        self.credits.place(relx= 0.62, rely = 0.175)
-        self.credits.configure(background = 'white') """
-
         self.show_hostname = tk.Button(master, text = 'Show hostname', command = self.print_hn)
         self.show_hostname.place(relx= 0.62, rely = 0.475)
         self.show_hostname.configure(background = 'white')
