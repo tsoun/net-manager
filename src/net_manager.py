@@ -8,6 +8,7 @@ import datetime
 from os.path import pardir, abspath, join, dirname
 from time import gmtime, strftime
 from sys import platform
+from tkinter import messagebox
 
 
 global hostname, IP_address, VERSION
@@ -50,6 +51,10 @@ class main_win():
         self.lcl_nw.place(relx = 0.1, rely = 0.4)
         self.lcl_nw.configure(background = 'white')
 
+    """    self.credits = tk.Button(master, text = 'Show Credits', command = self.show_info)
+        self.credits.place(relx= 0.62, rely = 0.175)
+        self.credits.configure(background = 'white') """
+
         self.show_hostname = tk.Button(master, text = 'Show hostname', command = self.print_hn)
         self.show_hostname.place(relx= 0.62, rely = 0.475)
         self.show_hostname.configure(background = 'white')
@@ -59,7 +64,7 @@ class main_win():
         self.show_wifi_password.configure(background = 'white')
 
         self.show_SPEEDEST = tk.Button(master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
-        self.show_SPEEDEST.place(relx= 0.62, rely = 0.15)
+        self.show_SPEEDEST.place(relx= 0.62, rely = 0.275)
         self.show_SPEEDEST.configure(background = 'white')
 
         self.hostname_entry = tk.Entry(master)
@@ -88,6 +93,9 @@ class main_win():
     def print_hn(self):
         self.hostname_entry.delete(0, 'end')
         self.hostname_entry.insert(0, hostname)
+
+    def show_info(self):
+        messagebox.showinfo('Net Manager ' + VERSION + ' Alpha', 'contributors: tsoun and\nvanourogeros.')
 
     def print_ip(self):
         self.ip_entry.delete(0, 'end')
