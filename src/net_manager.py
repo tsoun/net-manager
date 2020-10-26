@@ -4,15 +4,15 @@ import tkinter.scrolledtext as scr
 import pyperclip
 import subprocess
 import datetime
-from os.path import dirname, join
+from os.path import pardir, abspath, join, dirname
 from time import gmtime, strftime
 
 """ v0.2.1 """
 
 global hostname, IP_address
 
-current_dir = dirname(__file__)
-image_path = join(current_dir, "net.png")
+current_dir = abspath(join(dirname(__file__), pardir))
+image_path = join(current_dir, "img/net.png")
 
 class main_win():
     def __init__(self, master):
