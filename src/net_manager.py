@@ -6,6 +6,7 @@ import subprocess
 import datetime
 from os.path import pardir, abspath, join, dirname
 from time import gmtime, strftime
+from sys import platform
 
 
 global hostname, IP_address, VERSION
@@ -25,19 +26,19 @@ class main_win():
         self.masterback = tk.Frame(height = 300, width = 500)
         self.masterback.pack()
         self.masterback.configure(background = 'white')
-         
+
         self.Message = tk.Label(master, text='Welcome to Net Manager ' + VERSION + ' Alpha Build - Exclusive Alpha Access.')
         self.Message.place(relx= 0.5, rely = 0.105, anchor = 'center')
         self.Message.configure(background = 'white')
- 
+
         self.show_ip = tk.Button(master, text = 'Show host IP address', command = self.print_ip)
         self.show_ip.place(relx= 0.62, rely = 0.575)
         self.show_ip.configure(background = 'white')
-                        
+
         self.ip_entry = tk.Entry(master)
         self.ip_entry.place(relx = 0.1, rely = 0.6)
         self.ip_entry.configure(background = 'white')
-        
+
         var = tk.StringVar()
         var.set('Crnt NW Name: ' + self.find_nw_name())
         self.lbl_lcl_nw = tk.Label(master, textvariable = var, bg = 'white')
@@ -51,7 +52,7 @@ class main_win():
         self.show_hostname = tk.Button(master, text = 'Show hostname', command = self.print_hn)
         self.show_hostname.place(relx= 0.62, rely = 0.475)
         self.show_hostname.configure(background = 'white')
-        
+
         self.show_wifi_password = tk.Button(master, text = 'Show Wifi password', command = self.find_wifi_password)
         self.show_wifi_password.place(relx= 0.62, rely = 0.375)
         self.show_wifi_password.configure(background = 'white')
@@ -59,11 +60,11 @@ class main_win():
         self.show_SPEEDEST = tk.Button(master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
         self.show_SPEEDEST.place(relx= 0.62, rely = 0.15)
         self.show_SPEEDEST.configure(background = 'white')
-                        
+
         self.hostname_entry = tk.Entry(master)
         self.hostname_entry.place(relx = 0.1, rely = 0.5)
         self.hostname_entry.configure(background = 'white')
-        
+
         img = tk.PhotoImage(file = image_path)
         self.master.label= tk.Label(self.master, image = img)
         self.master.label.image = img
@@ -86,22 +87,25 @@ class main_win():
     def print_hn(self):
         self.hostname_entry.delete(0, 'end')
         self.hostname_entry.insert(0, hostname)
-        
+
     def print_ip(self):
         self.ip_entry.delete(0, 'end')
         self.ip_entry.insert(0, IP_address)
-        
+
         self.copy_ip()
         self.print_time()
         self.print_to_log('Shown ' + hostname + '\'s IP address and copied it to clipboard.')
 
     def find_nw_name(self):
-        self.nw_str = (str(subprocess.check_output('netsh wlan show interfaces')))
+        if platform == 'win32':
+          self.nw_str = (str(subprocess.check_output('netsh wlan show interfaces')))
+        elif platform == 'linux' or platform == 'linux2':
+          return (str(subprocess.check_output(('iwgetid', '-r')))[2:-3])
         self.nw_lst = self.nw_str.split()
         idx = self.nw_lst.index('SSID')
         idx += 2
         return self.nw_lst[idx][:-4]
-    
+
     def copy_ip(self):
         pyperclip.copy(self.ip_entry.get())
         spam = pyperclip.paste()
