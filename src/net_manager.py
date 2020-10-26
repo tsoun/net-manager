@@ -9,6 +9,7 @@ from os.path import pardir, abspath, join, dirname
 from time import gmtime, strftime
 from sys import platform
 from tkinter import messagebox
+import webbrowser
 
 
 global hostname, IP_address, VERSION
@@ -22,48 +23,47 @@ class main_win():
         self.master = master
         self.master.option_add("*Font", 'arial 10')
         self.master.title('Net Manager ' + VERSION + ' Alpha')
-        self.master = master
         self.master.configure(background = 'white')
         self.master.resizable(False, False)
         self.masterback = tk.Frame(height = 300, width = 500)
         self.masterback.pack()
         self.masterback.configure(background = 'white')
 
-        self.Message = tk.Label(master, text='Welcome to Net Manager ' + VERSION + ' Alpha Build - Exclusive Alpha Access.')
-        self.Message.place(relx= 0.5, rely = 0.105, anchor = 'center')
+        self.Message = tk.Label(self.master, text='Welcome to Net Manager ' + VERSION + ' \nAlpha Build - Exclusive Alpha Access.', font='Helvetica 13 bold', justify='left')
+        self.Message.place(relx= 0.415, rely = 0.105, anchor = 'center')
         self.Message.configure(background = 'white')
 
-        self.show_ip = tk.Button(master, text = 'Show host IP address', command = self.print_ip)
+        self.show_ip = tk.Button(self.master, text = 'Show host IP address', command = self.print_ip)
         self.show_ip.place(relx= 0.62, rely = 0.575)
         self.show_ip.configure(background = 'white')
 
-        self.ip_entry = tk.Entry(master)
+        self.ip_entry = tk.Entry(self.master)
         self.ip_entry.place(relx = 0.1, rely = 0.6)
         self.ip_entry.configure(background = 'white')
 
         var = tk.StringVar()
-        var.set('Crnt NW Name: ' + self.find_nw_name())
+        var.set('Current Network: ' + self.find_nw_name())
         self.lbl_lcl_nw = tk.Label(master, textvariable = var, bg = 'white')
         self.lbl_lcl_nw.place(relx = 0.1, rely = 0.3)
         self.lbl_lcl_nw.configure(background = 'white')
 
-        self.lcl_nw = tk.Entry(master)
+        self.lcl_nw = tk.Entry(self.master)
         self.lcl_nw.place(relx = 0.1, rely = 0.4)
         self.lcl_nw.configure(background = 'white')
 
-        self.show_hostname = tk.Button(master, text = 'Show hostname', command = self.print_hn)
+        self.show_hostname = tk.Button(self.master, text = 'Show hostname', command = self.print_hn)
         self.show_hostname.place(relx= 0.62, rely = 0.475)
         self.show_hostname.configure(background = 'white')
 
-        self.show_wifi_password = tk.Button(master, text = 'Show Wifi password', command = self.find_wifi_password)
+        self.show_wifi_password = tk.Button(self.master, text = 'Show WiFi passphrases', command = self.find_wifi_password)
         self.show_wifi_password.place(relx= 0.62, rely = 0.375)
         self.show_wifi_password.configure(background = 'white')
 
-        self.show_SPEEDEST = tk.Button(master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
+        self.show_SPEEDEST = tk.Button(self.master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
         self.show_SPEEDEST.place(relx= 0.62, rely = 0.275)
         self.show_SPEEDEST.configure(background = 'white')
 
-        self.hostname_entry = tk.Entry(master)
+        self.hostname_entry = tk.Entry(self.master)
         self.hostname_entry.place(relx = 0.1, rely = 0.5)
         self.hostname_entry.configure(background = 'white')
 
@@ -73,9 +73,9 @@ class main_win():
         self.master.label.place(relx = 0.08, rely= 0.175, anchor="s")
         self.master.label.configure(background = 'white')
 
-        self.log_label = tk.Label(self.master, bg = 'white', text = 'Action log:')
-        self.log_label.place(rely = 0.69, relx = 0.02)
-        self.log_frame = tk.Frame(master, bg = 'white')
+        self.log_label = tk.Label(self.master, bg = 'white', text = 'Action log:', font='Helvetica 8 italic bold')
+        self.log_label.place(rely = 0.7, relx = 0.02)
+        self.log_frame = tk.Frame(self.master, bg = 'white')
         self.log_frame.pack(fill = 'both', expand = 'yes')
         self.log = scr.ScrolledText(
             master = self.log_frame,
@@ -85,6 +85,19 @@ class main_win():
         )
         self.log.pack(padx = 10, pady = 10, fill = 'both', expand = 'True')
         self.log.insert('insert', 'Your network: ' + self.find_nw_name() + '\n')
+
+    def show_isp(self, isp):
+        isp_name = tk.StringVar()
+        isp_name.set('ISP : ' + isp)
+        self.lbl_lcl_nw = tk.Label(self.master, textvariable = isp_name, bg = 'white')
+        self.lbl_lcl_nw.place(relx = 0.1, rely = 0.2)
+        self.lbl_lcl_nw.configure(background = 'white')
+
+    def open_browser(self):
+        try:
+            webbrowser.get(using='microsoft-edge').open('192.168.1.1', 1)
+        except:
+            webbrowser.open('192.168.1.1', 1)
 
     def print_hn(self):
         self.hostname_entry.delete(0, 'end')
@@ -151,10 +164,11 @@ class main_win():
             self.print_to_log('Speedtest ready.')
             try:
                 with open(join(current_dir, 'src/speed.txt'), 'r') as s:
-                    lines = s.readlines()
+                    lines = [line.rstrip() for line in s]
                     self.print_time()
                     self.print_to_log(lines[-3].rstrip() + ' // ' + lines[-1].rstrip())
                 os.remove(join(current_dir, "src/speed.txt"))
+                self.show_isp(lines[1].split(" ")[2])
             except:
                 self.print_time()
                 self.print_to_log('Error, cannot print the results.')
