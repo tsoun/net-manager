@@ -16,7 +16,7 @@ global hostname, IP_address, VERSION
 VERSION = '0.3.1'
 
 current_dir = abspath(join(dirname(__file__), pardir))
-image_path = join(current_dir, "img/net.png")
+image_path = join(current_dir, "img\\net.png")
 
 class main_win():
     def __init__(self, master):
@@ -33,38 +33,38 @@ class main_win():
         self.Message.place(relx= 0.415, rely = 0.105, anchor = 'center')
         self.Message.configure(background = 'white')
 
-        self.show_ip = tk.Button(self.master, text = 'Show host IP address', command = self.print_ip)
-        self.show_ip.place(relx= 0.62, rely = 0.575, width = 200)
+        self.show_ip = tk.Button(self.master, text = 'Show Host IP Address', command = self.print_ip)
+        self.show_ip.place(relx= 0.1, rely = 0.6, width = 200)
         self.show_ip.configure(background = 'white')
 
         self.ip_entry = tk.Entry(self.master)
-        self.ip_entry.place(relx = 0.1, rely = 0.6)
+        self.ip_entry.place(relx = 0.62, rely = 0.6)
         self.ip_entry.configure(background = 'white')
 
         var = tk.StringVar()
         var.set('Current Network: ' + self.find_nw_name())
         self.lbl_lcl_nw = tk.Label(master, textvariable = var, bg = 'white')
-        self.lbl_lcl_nw.place(relx = 0.1, rely = 0.3)
+        self.lbl_lcl_nw.place(relx = 0.62, rely = 0.3)
         self.lbl_lcl_nw.configure(background = 'white')
 
         self.lcl_nw = tk.Entry(self.master)
-        self.lcl_nw.place(relx = 0.1, rely = 0.4)
+        self.lcl_nw.place(relx = 0.62, rely = 0.4)
         self.lcl_nw.configure(background = 'white')
 
-        self.show_hostname = tk.Button(self.master, text = 'Show hostname', command = self.print_hn)
-        self.show_hostname.place(relx= 0.62, rely = 0.475, width = 200)
+        self.show_hostname = tk.Button(self.master, text = 'Show Hostname', command = self.print_hn)
+        self.show_hostname.place(relx= 0.1, rely = 0.5, width = 200)
         self.show_hostname.configure(background = 'white')
 
-        self.show_wifi_password = tk.Button(self.master, text = 'Show WiFi passphrases', command = self.find_wifi_password)
-        self.show_wifi_password.place(relx= 0.62, rely = 0.375, width = 200)
+        self.show_wifi_password = tk.Button(self.master, text = 'Show WiFi Passphrases', command = self.find_wifi_password)
+        self.show_wifi_password.place(relx= 0.1, rely = 0.4, width = 200)
         self.show_wifi_password.configure(background = 'white')
 
         self.show_SPEEDEST = tk.Button(self.master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
-        self.show_SPEEDEST.place(relx= 0.62, rely = 0.275, width = 200)
+        self.show_SPEEDEST.place(relx= 0.1, rely = 0.3, width = 200)
         self.show_SPEEDEST.configure(background = 'white')
 
         self.hostname_entry = tk.Entry(self.master)
-        self.hostname_entry.place(relx = 0.1, rely = 0.5)
+        self.hostname_entry.place(relx = 0.62, rely = 0.5)
         self.hostname_entry.configure(background = 'white')
 
         img = tk.PhotoImage(file = image_path)
@@ -93,7 +93,7 @@ class main_win():
         isp_name = tk.StringVar()
         isp_name.set('ISP : ' + isp)
         self.lbl_lcl_nw = tk.Label(self.master, textvariable = isp_name, bg = 'white')
-        self.lbl_lcl_nw.place(relx = 0.1, rely = 0.2)
+        self.lbl_lcl_nw.place(relx = 0.62, rely = 0.2)
         self.lbl_lcl_nw.configure(background = 'white')
 
     def open_browser(self):
@@ -131,8 +131,11 @@ class main_win():
         pyperclip.copy(self.ip_entry.get())
         spam = pyperclip.paste()
 
-    def print_to_log(self, msg):
-        self.log.insert('insert', msg + '\n\n')
+    def print_to_log(self, msg, new_line = True):
+        if new_line == True:
+            self.log.insert('insert', msg + '\n\n')
+        else:
+            self.log.insert('insert', msg)
         self.log.see(tk.END)
 
     def print_time (self):
@@ -141,19 +144,22 @@ class main_win():
     def find_wifi_password(self):
         self.print_time()
         self.print_to_log('Shown network ID\'s and passphrases.')
-        data = subprocess.check_output(['netsh', 'wlan', 'show', 'profiles']).decode('utf-8', errors="backslashreplace").split('\n')
-        profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
-        for i in profiles:
-            try:
-                results = subprocess.check_output(['netsh', 'wlan', 'show', 'profile', i, 'key=clear']).decode('utf-8', errors="backslashreplace").split('\n')
-                results = [b.split(":")[1][1:-1] for b in results if "Key Content" in b]
+        try:
+            data = subprocess.check_output(['netsh', 'wlan', 'show', 'profiles']).decode('utf-8', errors="backslashreplace").split('\n')
+            profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
+            for i in profiles:
                 try:
-                    self.log.insert('insert', str(i) + ' : ' + str(results[0]) + '\n')
-                except IndexError:
-                    self.log.insert('insert', str(i) + ": OpenNetwork\n")
-            except subprocess.CalledProcessError:
-                self.log.insert('insert', (i, "ENCODING ERROR"))
-                input("")
+                    results = subprocess.check_output(['netsh', 'wlan', 'show', 'profile', i, 'key=clear']).decode('utf-8', errors="backslashreplace").split('\n')
+                    results = [b.split(":")[1][1:-1] for b in results if "Key Content" in b]
+                    try:
+                        self.print_to_log(str(i) + ' : ' + str(results[0]) + '\n', False)
+                    except IndexError:
+                        self.print_to_log(str(i) + ": OpenNetwork\n", False)
+                except subprocess.CalledProcessError:
+                    self.print_to_log((i, 'ENCODING ERROR'), False)
+                    input("")
+        except:
+            self.print_to_log('Error caused by your type of connection. Switch to WiFi.')
 
     def print_SPEEDTEST(self):
         try:
@@ -161,17 +167,17 @@ class main_win():
             self.print_to_log('Trying to connect.')
             dir = join(current_dir, "src/speed.txt")
             if platform == 'win32':
-              subprocess.call(["speedtest-cli",  ">",  join(current_dir, "src/speed.txt")], shell=True)
+              subprocess.call(["speedtest-cli",  ">",  join(current_dir, "speed.txt")], shell=True)
             elif platform == 'linux' or platform == 'linux2':
               subprocess.call('speedtest-cli > speed.txt', shell=True, cwd = join(current_dir, "src"))
             self.print_time()
             self.print_to_log('Speedtest ready.')
             try:
-                with open(join(current_dir, 'src/speed.txt'), 'r') as s:
+                with open(join(current_dir, 'speed.txt'), 'r') as s:
                     lines = [line.rstrip() for line in s]
                     self.print_time()
                     self.print_to_log(lines[-3].rstrip() + ' // ' + lines[-1].rstrip())
-                os.remove(join(current_dir, "src/speed.txt"))
+                os.remove(join(current_dir, "speed.txt"))
                 self.show_isp(lines[1].split(" ")[2])
             except:
                 self.print_time()

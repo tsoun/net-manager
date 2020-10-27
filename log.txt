@@ -1,0 +1,3 @@
+for v0.3.5:
+>ethernet problem
+>speedtest problem for some win
