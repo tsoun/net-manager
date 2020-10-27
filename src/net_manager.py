@@ -13,7 +13,7 @@ import webbrowser
 
 
 global hostname, IP_address, VERSION
-VERSION = '0.3.0'
+VERSION = '0.3.1'
 
 current_dir = abspath(join(dirname(__file__), pardir))
 image_path = join(current_dir, "img/net.png")
@@ -25,7 +25,7 @@ class main_win():
         self.master.title('Net Manager ' + VERSION + ' Alpha')
         self.master.configure(background = 'white')
         self.master.resizable(False, False)
-        self.masterback = tk.Frame(height = 300, width = 500)
+        self.masterback = tk.Frame(height = 500, width = 500)
         self.masterback.pack()
         self.masterback.configure(background = 'white')
 
@@ -34,7 +34,7 @@ class main_win():
         self.Message.configure(background = 'white')
 
         self.show_ip = tk.Button(self.master, text = 'Show host IP address', command = self.print_ip)
-        self.show_ip.place(relx= 0.62, rely = 0.575)
+        self.show_ip.place(relx= 0.62, rely = 0.575, width = 200)
         self.show_ip.configure(background = 'white')
 
         self.ip_entry = tk.Entry(self.master)
@@ -52,15 +52,15 @@ class main_win():
         self.lcl_nw.configure(background = 'white')
 
         self.show_hostname = tk.Button(self.master, text = 'Show hostname', command = self.print_hn)
-        self.show_hostname.place(relx= 0.62, rely = 0.475)
+        self.show_hostname.place(relx= 0.62, rely = 0.475, width = 200)
         self.show_hostname.configure(background = 'white')
 
         self.show_wifi_password = tk.Button(self.master, text = 'Show WiFi passphrases', command = self.find_wifi_password)
-        self.show_wifi_password.place(relx= 0.62, rely = 0.375)
+        self.show_wifi_password.place(relx= 0.62, rely = 0.375, width = 200)
         self.show_wifi_password.configure(background = 'white')
 
         self.show_SPEEDEST = tk.Button(self.master, text = 'Run Speedtest', command = self.print_SPEEDTEST)
-        self.show_SPEEDEST.place(relx= 0.62, rely = 0.275)
+        self.show_SPEEDEST.place(relx= 0.62, rely = 0.275, width = 200)
         self.show_SPEEDEST.configure(background = 'white')
 
         self.hostname_entry = tk.Entry(self.master)
@@ -81,7 +81,10 @@ class main_win():
             master = self.log_frame,
             wrap = 'word',
             width = 75,
-            height = 5
+            height = 10,
+            background = 'blue',
+            font = 'Courier 10',
+            fg = 'white'
         )
         self.log.pack(padx = 10, pady = 10, fill = 'both', expand = 'True')
         self.log.insert('insert', 'Your network: ' + self.find_nw_name() + '\n')
@@ -130,6 +133,7 @@ class main_win():
 
     def print_to_log(self, msg):
         self.log.insert('insert', msg + '\n\n')
+        self.log.see(tk.END)
 
     def print_time (self):
         self.log.insert('insert', '\n' + str(strftime('%Y.%m.%d, %H:%M:%S', gmtime())) + ' // ')
