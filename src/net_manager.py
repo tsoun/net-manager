@@ -70,7 +70,7 @@ class main_win():
         img = tk.PhotoImage(file = image_path)
         self.master.label= tk.Label(self.master, image = img)
         self.master.label.image = img
-        self.master.label.place(relx = 0.08, rely= 0.175, anchor="s")
+        self.master.label.place(relx = 0.08, rely= 0.07)
         self.master.label.configure(background = 'white')
 
         self.log_label = tk.Label(self.master, bg = 'white', text = 'Action log:', font='Helvetica 8 italic bold')
@@ -136,7 +136,7 @@ class main_win():
         self.log.see(tk.END)
 
     def print_time (self):
-        self.log.insert('insert', '\n' + str(strftime('%Y.%m.%d, %H:%M:%S', gmtime())) + ' // ')
+        self.log.insert('insert', '\n' + str(strftime('%Y.%m.%d, %H:%M:%S', gmtime())) + ' >> ')
 
     def find_wifi_password(self):
         self.print_time()
